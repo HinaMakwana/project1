@@ -1,0 +1,11 @@
+*{
+ margin: 0;
+ padding: 0;
+ text-decoration: none;
+ /* mix-blend-mode: multiply; */
+}
+
+.active {
+  background: #026e8c8b;
+  color: #000;
+}

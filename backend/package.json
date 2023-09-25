@@ -1,0 +1,42 @@
+{
+  "name": "backend",
+  "private": true,
+  "version": "0.0.0",
+  "description": "a Sails application",
+  "keywords": [],
+  "dependencies": {
+    "@sailshq/lodash": "^3.10.3",
+    "bcrypt": "^5.1.1",
+    "cloudinary": "^1.40.0",
+    "csvtojson": "^2.0.10",
+    "dotenv": "^16.3.1",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.5",
+    "pg": "^8.11.3",
+    "sails": "^1.5.4",
+    "sails-hook-orm": "^4.0.0",
+    "sails-hook-sockets": "^2.0.0",
+    "sails-postgresql": "^5.0.1",
+    "uuid": "^9.0.1",
+    "validatorjs": "^3.22.1"
+  },
+  "devDependencies": {
+    "eslint": "5.16.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node app.js",
+    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+    "lint": "./node_modules/eslint/bin/eslint.js . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
+    "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ztlab133/backend.git"
+  },
+  "author": "ztlab133",
+  "license": "",
+  "engines": {
+    "node": "^18.13"
+  }
+}
