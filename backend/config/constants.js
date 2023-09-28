@@ -8,6 +8,7 @@ let { v4: uuidv4 } = require("uuid");
 let resCode = {
   BAD_REQUEST: 400,
   NOT_FOUND: 404,
+	UNAUTHORIZED: 401,
   SERVER_ERROR: 500,
   CONFLICT: 409,
   OK: 200,
@@ -112,12 +113,17 @@ const validationRule = {
 		price: "required",
 		imageUrl: "string"
 	}
-
 };
+
+const orderStatus = {
+	pending : "Pending",
+	delivered : "Delivered",
+	cancel : "Cancel"
+}
 
 const template = {
 	Welcometemplate : `
-		<b>Welcome</b> 
+		<b>Welcome</b>
 	`
 }
 
@@ -128,5 +134,6 @@ module.exports.constants = {
   cloudinary,
   imageType,
 	validationRule,
-	status
+	status,
+	orderStatus
 };

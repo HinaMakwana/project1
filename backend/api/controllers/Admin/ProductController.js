@@ -5,7 +5,7 @@
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
 let Msg = sails.config.getMessage;
-let { resCode, UUID } = sails.config.constants;
+let { resCode, UUID, status } = sails.config.constants;
 let fs = require("node:fs");
 const path = require("path");
 const csvtojson = require("csvtojson");
@@ -21,8 +21,14 @@ module.exports = {
   addProduct: async (req, res) => {
     let lang = req.getLocale();
     try {
-      let { name, categoryId, subCategoryId, description, quantity, price } =
-        req.body;
+      let {
+        name,
+        categoryId,
+        subCategoryId,
+        description,
+        quantity,
+        price
+      } = req.body;
 
       let result = await Product.ValidationBeforeCreate({
         name,
@@ -35,6 +41,7 @@ module.exports = {
       if (result.hasError) {
         return res.status(resCode.BAD_REQUEST).json({
           message: Msg("ValidationError", lang),
+          status: resCode.BAD_REQUEST,
         });
       }
 
@@ -45,16 +52,19 @@ module.exports = {
       if (checkProduct) {
         return res.status(resCode.CONFLICT).json({
           message: Msg("ProductAvailable", lang),
+          status: resCode.CONFLICT,
         });
       }
 
       let checkCategory = await Category.findOne({
         id: categoryId,
         isDeleted: false,
+        status: status.A
       });
       if (!checkCategory) {
         return res.status(resCode.BAD_REQUEST).json({
           message: Msg("InvalidCategory", lang),
+          status: resCode.BAD_REQUEST,
         });
       }
       let checkSubCategory;
@@ -63,10 +73,12 @@ module.exports = {
           id: subCategoryId,
           category: categoryId,
           isDeleted: false,
+          status: status.A
         });
         if (!checkSubCategory) {
           return res.status(resCode.BAD_REQUEST).json({
             message: Msg("SubCategoryInvalid", lang),
+            status: resCode.BAD_REQUEST,
           });
         }
       }
@@ -99,12 +111,14 @@ module.exports = {
         });
       }
       return res.status(resCode.CREATED).json({
+        status: resCode.CREATED,
         message: Msg("ProductCreated", lang),
         data: addProduct,
       });
     } catch (error) {
       return res.status(resCode.SERVER_ERROR).json({
         message: Msg("Error", lang) + error,
+        status: resCode.SERVER_ERROR,
       });
     }
   },
@@ -118,8 +132,7 @@ module.exports = {
   editProduct: async (req, res) => {
     let lang = req.getLocale();
     try {
-      let { description, quantity, price } = req.body;
-      let { productId } = req.params;
+      let { description, quantity, price, productId } = req.body;
 
       let findProduct = await Product.findOne({
         id: productId,
@@ -128,6 +141,7 @@ module.exports = {
       if (!findProduct) {
         return res.status(resCode.BAD_REQUEST).json({
           message: Msg("ProductNotFound", lang),
+          status: resCode.BAD_REQUEST
         });
       }
 
@@ -142,10 +156,12 @@ module.exports = {
       return res.status(resCode.OK).json({
         message: Msg("ProductUpdated", lang),
         data: updateData,
+        status: resCode.OK
       });
     } catch (error) {
       return res.status(resCode.SERVER_ERROR).json({
         message: Msg("Error", lang) + error,
+        status: resCode.SERVER_ERROR
       });
     }
   },
@@ -154,7 +170,7 @@ module.exports = {
    * @param {Request} req
    * @param {Response} res
    * @description delete product by admin
-   * @route (DELETE /delete/product)
+   * @route (DELETE /delete/product/:productId)
    */
   deleteProduct: async (req, res) => {
     let lang = req.getLocale();
@@ -166,6 +182,7 @@ module.exports = {
       });
       if (!findProduct) {
         return res.status(resCode.BAD_REQUEST).json({
+          status: resCode.BAD_REQUEST,
           message: Msg("ProductNotFound", lang),
         });
       }
@@ -175,11 +192,13 @@ module.exports = {
         isDeleted: false,
       }).set({ isDeleted: true });
       return res.status(resCode.OK).json({
+        status: resCode.OK,
         message: Msg("ProductDeleted", lang),
         data: deleteProduct,
       });
     } catch (error) {
       return res.status(resCode.SERVER_ERROR).json({
+        status: resCode.SERVER_ERROR,
         message: Msg("Error", lang),
       });
     }
@@ -194,30 +213,33 @@ module.exports = {
   changeStatus: async (req, res) => {
     let lang = req.getLocale();
     try {
-      let { productId } = req.params;
-      let { status } = req.body;
+      // let { id } = req.params;
+      let { status,id } = req.body;
       let findProduct = await Product.findOne({
-        id: productId,
-        isDeleted: false,
+        id: id,
+        isDeleted: false
       });
       if (!findProduct) {
         return res.status(resCode.BAD_REQUEST).json({
           message: Msg("ProductNotFound", lang),
+          status: resCode.BAD_REQUEST
         });
       }
 
       let changeStatus = await Product.updateOne({
-        id: productId,
+        id: id,
         isDeleted: false,
       }).set({
         status: status,
       });
       return res.status(resCode.OK).json({
         data: changeStatus,
+        status: resCode.OK
       });
     } catch (error) {
       return res.status(resCode.SERVER_ERROR).json({
         message: Msg("Error", lang) + error,
+        status: resCode.SERVER_ERROR
       });
     }
   },
@@ -280,7 +302,10 @@ module.exports = {
           message: Msg("NoResult", lang),
         });
       }
-      return res.send(data);
+      return res.status(resCode.OK).json({
+        status: resCode.OK,
+        data: data
+      })
     } catch (error) {
       return res.status(resCode.SERVER_ERROR).json({
         message: Msg("Error", lang) + error,

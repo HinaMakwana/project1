@@ -29,6 +29,7 @@ module.exports = {
 			})
 			if(!checkId) {
 				return res.status(resCode.BAD_REQUEST).json({
+					status: resCode.BAD_REQUEST,
 					message: Msg("InvalidCategory",lang)
 				})
 			}
@@ -42,6 +43,7 @@ module.exports = {
 			})
 			if(checkCategory || checkSubCategory) {
 				return res.status(resCode.CONFLICT).json({
+					status: resCode.CONFLICT,
 					message: Msg("CategoryConflict",lang)
 				})
 			}
@@ -58,11 +60,13 @@ module.exports = {
 				category: categoryId
 			}).fetch()
 			return res.status(resCode.CREATED).json({
+				status: resCode.CREATED,
 				message: Msg("CategoryCreated",lang),
 				data: data
 			})
 		} catch (error) {
 			return res.status(resCode.SERVER_ERROR).json({
+				status: resCode.SERVER_ERROR,
 				message: Msg("Error",lang) + error
 			})
 		}
@@ -77,8 +81,7 @@ module.exports = {
 	editSubCategory : async (req,res) => {
 		let lang = req.getLocale();
 		try {
-			let { id } = req.params;
-			let { status } = req.body;
+			let { status,id } = req.body;
 
 			let findSubCategory = await SubCategory.findOne({
 				id: id,
@@ -86,6 +89,7 @@ module.exports = {
 			});
 			if(!findSubCategory) {
 				return res.status(resCode.NOT_FOUND).json({
+					status: resCode.NOT_FOUND,
 					message: Msg("InvalidCategory",lang)
 				})
 			};
@@ -96,6 +100,7 @@ module.exports = {
 			})
 			if(checkCategory) {
 				return res.status(resCode.BAD_REQUEST).json({
+					status: resCode.BAD_REQUEST,
 					message: Msg("NotEditable",lang)
 				})
 			};
@@ -108,11 +113,13 @@ module.exports = {
 				status: status
 			})
 			return res.status(resCode.OK).json({
+				status: resCode.OK,
 				message: Msg("CategoryUpdated",lang),
 				data: updateCategory
 			})
 		} catch (error) {
 			return res.status(resCode.SERVER_ERROR).json({
+				data: resCode.SERVER_ERROR,
 				message: Msg("Error",lang)  + error
 			})
 		}
@@ -122,7 +129,7 @@ module.exports = {
    * @param {Request} req
    * @param {Response} res
    * @description delete subCategory by admin only if subCategory is empty
-   * @route (DELETE /delete/subCategory)
+   * @route (DELETE /delete/subCategory/:id)
    */
 	deleteSubCategory: async (req,res) => {
 		let lang = req.getLocale();
@@ -135,6 +142,7 @@ module.exports = {
 			})
 			if(!findCategory) {
 				return res.status(resCode.NOT_FOUND).json({
+					status: resCode.NOT_FOUND,
 					message: Msg("InvalidCategory",lang)
 				})
 			}
@@ -145,6 +153,7 @@ module.exports = {
 			})
 			if(checkCategory) {
 				return res.status(resCode.BAD_REQUEST).json({
+					status: resCode.BAD_REQUEST,
 					message: Msg("NotDeleted",lang)
 				})
 			}
@@ -154,10 +163,12 @@ module.exports = {
 			})
 			.set({isDeleted: true});
 			return res.status(resCode.OK).json({
+				status: resCode.OK,
 				message: Msg("Deleted",lang)
 			})
 		} catch (error) {
 			return res.status(resCode.SERVER_ERROR).json({
+				status: resCode.SERVER_ERROR,
 				message: Msg("Error",lang)
 			})
 		}
@@ -167,18 +178,33 @@ module.exports = {
    * @param {Request} req
    * @param {Response} res
    * @description list all subCategories
-   * @route (GET /list)
+   * @route (GET /list/:id)
    */
 	listAllSubCategory : async (req,res) => {
 		let lang = req.getLocale();
 		try {
-			let data = await SubCategory.find({ isDeleted: false })
+			let {id} = req.params;
+
+			let checkCategory = await  Category.findOne({
+				id: id,
+				isDeleted: false,
+				status: status.A
+			})
+			if(!checkCategory) {
+				return res.status(resCode.NOT_FOUND).json({
+					message: Msg("InvalidCategory",lang),
+					status: resCode.NOT_FOUND
+				})
+			}
+			let data = await SubCategory.find({ isDeleted: false, category: id })
 			return res.status(resCode.OK).json({
-				data: data
+				data: data,
+				status: resCode.OK
 			})
 		} catch (error) {
 			return res.status(resCode.SERVER_ERROR).json({
-				message: Msg("Error",lang)
+				message: Msg("Error",lang),
+				status: resCode.SERVER_ERROR
 			})
 		}
 	},
@@ -196,9 +222,9 @@ module.exports = {
 			let query = `
 				SELECT
 					"s"."id",
-					"subCategoryName",
+					"subCategoryName" AS "name",
 					"s"."Image",
-					"s"."Number of Products",
+					"s"."Number of Products" AS "No_Products",
 					"s"."isDeleted",
 					"s"."status",
 					"category",
@@ -215,7 +241,10 @@ module.exports = {
 					message: Msg("NoResult",lang)
 				})
 			}
-			return res.send(data)
+			return res.status(resCode.OK).json({
+				status: resCode.OK,
+				data: data
+			})
 		} catch (error) {
 			return res.status(resCode.SERVER_ERROR).json({
 				message: Msg("Error",lang) + error

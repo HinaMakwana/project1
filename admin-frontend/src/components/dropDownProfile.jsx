@@ -24,15 +24,15 @@ function DropDownProfile() {
     getProfile();
   }, []);
   return (
-    <div className=" h-20 absolute right-24">
+    <div className=" relative ">
       <Menu>
         <MenuHandler>
           <div className="flex items-center gap-2 cursor-pointer">
-            <img src="user.svg" className="h-12" />
+            <img src="/user.svg" className="h-12" />
             <h3 className="text-black">{data && data.name}</h3>
           </div>
         </MenuHandler>
-        <MenuList className="border-2 p-2 bg-cyan-100">
+        <MenuList className="border-2 p-2 mt-2 bg-cyan-100 ring-0 focus:ring-0 focus:outline-none outline-none">
           <MenuItem className="flex items-center gap-2 mt-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"

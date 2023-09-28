@@ -18,7 +18,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/categories" element={<Categories />} />
-          <Route path="/subCategory" element={<SubCategory />} />
+          <Route path="/:category/subCategory" element={<SubCategory />} />
           <Route path="/products" element={<Products />} />
           <Route path="/users" element={<Users />} />
         </Routes>

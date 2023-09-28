@@ -4,7 +4,7 @@
  * @description :: Server-side actions for handling incoming requests.
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
-let {resCode,UUID} = sails.config.constants;
+let {resCode,UUID,status} = sails.config.constants;
 let Msg = sails.config.getMessage;
 const path = require("path");
 const fs = require('node:fs');
@@ -33,6 +33,7 @@ module.exports = {
 			})
 			if(checkCategory || checkSubCategory) {
 				return res.status(resCode.CONFLICT).json({
+					status: resCode.CONFLICT,
 					message: Msg("CategoryConflict",lang)
 				})
 			}
@@ -49,11 +50,13 @@ module.exports = {
 				Image: categoryImage.data.url
 			}).fetch()
 			return res.status(resCode.CREATED).json({
+				status: resCode.CREATED,
 				message: Msg("CategoryCreated",lang),
 				data: data
 			})
 		} catch (error) {
 			return res.status(resCode.SERVER_ERROR).json({
+				status: resCode.SERVER_ERROR,
 				message: Msg("Error",lang) + error
 			})
 		}
@@ -69,45 +72,48 @@ module.exports = {
 		let lang = req.getLocale();
 		try {
 			let {
-				categoryId,
+				id,
 				status
 			} = req.body;
 
 			let checkCategory = await Category.findOne({
-				id: categoryId,
+				id: id,
 				isDeleted: false
 			})
 			if(!checkCategory) {
-				return res.status(resCode.BAD_REQUEST).json({
+				return res.status(resCode.NOT_FOUND).json({
+					status: resCode.NOT_FOUND,
 					message: Msg("InvalidCategory",lang)
 				})
 			}
 
-			let findCategory = await Product.findOne({
-				categoryId:  categoryId,
+			let findCategory = await Product.find({
+				categoryId:  id,
 				isDeleted: false
 			})
-			if(findCategory) {
+			if(findCategory[0]) {
 				return res.status(resCode.BAD_REQUEST).json({
+					status: resCode.BAD_REQUEST,
 					message: Msg("NotEditable",lang)
 				})
 			}
 			let updateStatus = await Category.updateOne({
-				id: categoryId,
+				id: id,
 				isDeleted: false
 			})
 			.set({
 				status: status
 			})
 			return res.status(resCode.OK).json({
+				status: resCode.OK,
 				message: Msg("CategoryUpdated",lang),
 				data: updateStatus
 			})
-
 		} catch (error) {
 			return res.status(resCode.SERVER_ERROR).json({
-				message: Msg("Error",lang)
-			}) 
+				status: resCode.SERVER_ERROR,
+				message: Msg("Error",lang) + error
+			})
 		}
 	},
 	/**
@@ -164,12 +170,35 @@ module.exports = {
    * @param {Request} req
    * @param {Response} res
    * @description list all categories
-   * @route (GET /list)
+   * @route (GET /listCategories)
    */
 	listAllCategory : async (req,res) => {
 		let lang = req.getLocale();
 		try {
 			let categories = await Category.find({ isDeleted: false})
+			return res.status(resCode.OK).json({
+				data: categories
+			})
+		} catch (error) {
+			return res.status(resCode.SERVER_ERROR).json({
+				message: Msg("Error",lang) + error
+			})
+		}
+	},
+	/**
+   *
+   * @param {Request} req
+   * @param {Response} res
+   * @description list all active categories
+   * @route (GET /list/active)
+   */
+	listActiveCategories : async (req,res) => {
+		let lang = req.getLocale();
+		try {
+			let categories = await Category.find({
+				isDeleted: false,
+				status: status.A
+			})
 			return res.status(resCode.OK).json({
 				data: categories
 			})
@@ -193,9 +222,9 @@ module.exports = {
 			let query = `
 				SELECT
 					"id",
-					"categoryName",
+					"categoryName" AS "name",
 					"Image",
-					"Number of Products",
+					"Number of Products" AS "No_Products",
 					"isDeleted",
 					"status"
 				FROM category
@@ -208,7 +237,10 @@ module.exports = {
 					message: Msg("NoResult",lang)
 				})
 			}
-			return res.send(data)
+			return res.status(resCode.OK).json({
+				status: resCode.OK,
+				data: data
+			})
 		} catch (error) {
 			return res.status(resCode.SERVER_ERROR).json({
 				message: Msg("Error",lang) + error

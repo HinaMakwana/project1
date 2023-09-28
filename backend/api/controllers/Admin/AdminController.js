@@ -223,5 +223,130 @@ module.exports = {
 			})
 		}
 	},
+	/**
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @description forget password api
+	 * @route (POST /forgetPass)
+	 */
+	forgetPassword: async (req,res) => {
+		let lang = req.getLocale();
+		try {
+			let { email } = req.body;
+
+			let checkEmail = await Admin.findOne({
+				email: email,
+			})
+			if(!checkEmail) {
+				return res.status(resCode.BAD_REQUEST).json({
+					message: Msg("EmailNotFound",lang)
+				})
+			}
+			let token = sails.config.constants.UUID();
+			let expireTime = Math.floor(Date.now() / 1000) + 120;
+
+			let updateData = await Admin.updateOne({
+				email: email,
+			})
+			.set({
+				forgetPassToken: token,
+				forgetTokenExpire: expireTime
+			})
+			return res.status(resCode.OK).json({
+				data: updateData
+			})
+		} catch (error) {
+			return res.status(resCode.SERVER_ERROR).json({
+				message: Msg("Error",lang)
+			})
+		}
+	},
+	/**
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @description reset password api
+	 * @route (PATCH /resetPass)
+	 */
+	resetPassword: async (req,res) => {
+		let lang = req.getLocale();
+		try {
+			let { token, password } = req.body;
+			let checkToken = await Admin.findOne({
+				forgetPassToken: token,
+			})
+			if(!checkToken) {
+				return res.status(resCode.BAD_REQUEST).json({
+					message: Msg("InvalidToken",lang)
+				})
+			}
+			if(checkToken.forgetTokenExpire <= Date.now()) {
+				return res.status(resCode.BAD_REQUEST).json({
+					message: Msg("TokenExpired",lang)
+				})
+			}
+			let hashPass = await bcrypt.hash(password,10)
+			await Admin.updateOne({
+				forgetPassToken: token,
+			})
+			.set({
+				password: hashPass,
+				forgetPassToken: null,
+				forgetTokenExpire: null
+			})
+			return res.status(resCode.OK).json({
+				message: Msg("PasswordUpdated",lang)
+			})
+		} catch (error) {
+			return res.status(resCode.SERVER_ERROR).json({
+				message : Msg("Error",lang) + error
+			})
+		}
+	},
+	/**
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @description change password api
+	 * @route (PATCH /changePass)
+	 */
+	changePassword: async (req,res) => {
+		let lang = req.getLocale();
+		try {
+			let {
+				oldPassword,
+				newPassword
+			} = req.body;
+			let { id } = req.me;
+
+			let findUser = await Admin.findOne({
+				id: id,
+			})
+			let verifyPass = await bcrypt.compare(oldPassword,findUser.password);
+			if(!verifyPass) {
+				return res.status(resCode.BAD_REQUEST).json({
+					message: Msg("InvalidPassword",lang)
+				})
+			}
+			if(oldPassword === newPassword) {
+				return res.status(resCode.BAD_REQUEST).json({
+					message: Msg("ConflictPass",lang)
+				})
+			}
+
+			let hashPass = await bcrypt.hash(newPassword,10);
+			await Admin.updateOne({
+				id: id,
+			})
+			.set({
+				password: hashPass
+			})
+			return res.status(resCode.OK).json({
+				message: Msg("PasswordUpdated",lang)
+			})
+		} catch (error) {
+			return res.status(resCode.SERVER_ERROR).json({
+				message: Msg("Error",lang)
+			})
+		}
+	}
 
 };

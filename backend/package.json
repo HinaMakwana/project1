@@ -17,6 +17,7 @@
     "sails-hook-orm": "^4.0.0",
     "sails-hook-sockets": "^2.0.0",
     "sails-postgresql": "^5.0.1",
+    "stripe": "^13.7.0",
     "uuid": "^9.0.1",
     "validatorjs": "^3.22.1"
   },

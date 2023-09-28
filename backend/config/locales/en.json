@@ -40,5 +40,8 @@
   "NotUploadFile" : "You have not upload any CSV file",
   "InvalidFileType" : "Only Csv file allowed to upload",
   "TokenExpired" : "Token Expired",
-  "PasswordUpdated" : "Password is reset"
+  "PasswordUpdated" : "Password is reset",
+  "CartNotFound" : "Not Any Cart Data Found",
+  "Unauthorized" : "Unauthorized error",
+  "CartDeleted" : "Product removed successfully in Cart"
 }

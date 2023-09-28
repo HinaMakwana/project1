@@ -8,8 +8,7 @@ let Msg = sails.config.getMessage;
 let { resCode } = sails.config.constants;
 const path = require("path");
 const fs = require("node:fs");
-const { allowedNodeEnvironmentFlags } = require("process");
-const User = require("../../models/User");
+const { log } = require("console");
 
 module.exports = {
   /**
@@ -309,19 +308,30 @@ module.exports = {
   },
   test : async (req,res) => {
     try {
-      let query = `
-        select sum(p.price) AS Price,
-        p.name as productName,
-        c.*
-        from category as c,
-        product as p
-        group by "c"."createdAt",
-        "c"."updatedAt",
-        "c"."id",
-        "p"."name"
-      `
-      let data = await sails.sendNativeQuery(query)
-      return res.send(data);
+      // let query = `
+      //   select sum(p.price) AS Price,
+      //   p.name as productName,
+      //   c.*
+      //   from category as c,
+      //   product as p
+      //   group by "c"."createdAt",
+      //   "c"."updatedAt",
+      //   "c"."id",
+      //   "p"."name"
+      // `
+      // let data = await sails.sendNativeQuery(query)
+      // for(let i=1; i <= 100; i++) {
+      //   if( i / 3 === 0) {
+      //     console.log('fizz');
+      //   } else if(i / 5 === 0) {
+      //     console.log('buzz');
+      //   } else if((i / 5 === 0) && (i / 3 === 0)) {
+      //     console.log('fizzbuzz');
+      //   } else {
+      //     console.log(i);
+      //   }
+      // }
+      // return res.send();
     } catch (error) {
       return res.status(500).json({
         message: 'error' + error

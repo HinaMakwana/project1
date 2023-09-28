@@ -2,14 +2,17 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../components/sidebar";
 import DropDownProfile from "../components/dropDownProfile";
 import { MdDeleteOutline } from "react-icons/md";
-import { BsThreeDotsVertical, BsSearch } from "react-icons/bs";
+import { BsSearch } from "react-icons/bs";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import DropDown from "../components/dropDown";
+import AddCategory from "../components/addCategory";
 
 function Categories() {
   let [categories, setCategory] = useState([]);
   let [text, setText] = useState("");
-
+  let navigate = useNavigate();
   let getCategories = async () => {
     let response = await fetch("http://localhost:1337/listCategories", {
       method: "GET",
@@ -45,6 +48,17 @@ function Categories() {
       );
     }
   };
+  let searchCategory = async () => {
+    let response = await fetch(`http://localhost:1337/search?title=${text}`,{
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('authToken')}`
+      }
+    })
+    let res = await response.json();
+    setCategory(res.data.rows)
+  };
+
   useEffect(() => {
     getCategories();
   }, []);
@@ -54,42 +68,38 @@ function Categories() {
         <Sidebar />
       </div>
       <div>
-        <div className="pt-5">
+        <div className="py-3 mt-10 rounded-lg mx-10 sm:mx-14 shadow-2xl px-10 flex justify-end">
           <DropDownProfile />
         </div>
         <div className="pt-10">
-          <div className="flex mt-10">
-            <div className="absolute right-70 ml-20">
+          <div className="mx-10 sm:mx-14 flex-row sm:flex">
+            <div className="">
               <input
                 type="text"
-                className=" p-2 h-11 border border-slate-300 rounded-md w-[500px] outline-none transition-colors ease-in-out duration-1000 focus:border-cyan-700"
-                placeholder="search category..."
+                className=" p-2 px-10 h-12 border border-slate-300 rounded-md w-[400px] sm:w-[335px] md:w-[400px] lg:w-[500px] xl:w-[700px] outline-none transition-colors ease-in-out duration-1000 focus:border-cyan-700"
+                placeholder="Search category..."
                 onChange={(e) => {
                   setText(e.target.value);
                 }}
                 value={text}
+                onKeyUp={searchCategory}
               />
-              <span className=" absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer">
+              <span className="relative -top-8 left-3 cursor-pointer">
                 <BsSearch />
               </span>
             </div>
-            <div className="absolute right-[90px]">
-              <button className=" bg-cyan-700 h-11 text-white p-2 w-40 rounded-lg hover:bg-cyan-800 hover:scale-110">
-                Add category
-              </button>
+            <div className=" sm:absolute sm:right-1 md:right-12 lg:right-40 xl:right-24 2xl:right-32">
+              <AddCategory />
             </div>
           </div>
           <div>
-            <table
-              className="border-collapse table-auto shadow-2xl m-20"
-
-            >
+            <table className="border-collapse table-auto shadow-2xl mx-10 sm:mx-14 mt-5 w-[80vw] xl:w-[85vw] 2xl:w-[87.5vw]">
               <thead>
-                <tr className=" bg-cyan-800 border text-left h-14">
-                  <th className="pl-10">Image</th>
+                <tr className=" bg-cyan-800 border h-14">
+                  <th>Image</th>
                   <th>Name</th>
-                  <th className="">No of Products</th>
-                  <th className="pl-10">status</th>
+                  <th>No of Products</th>
+                  <th>status</th>
                   <th>Change status</th>
                   <th></th>
                 </tr>
@@ -101,26 +111,37 @@ function Categories() {
                       className=" even:bg-cyan-100 hover:bg-cyan-200 h-14"
                       key={category.id}
                     >
-                      <td className="pl-10">
+                      <td className="flex justify-center">
                         <img src={category.Image} className="h-5" />
                       </td>
-                      <td>{category.name}</td>
-                      <td>{category.No_Products}</td>
+                      <td
+                        className="text-center cursor-pointer"
+                        onClick={() => {
+                          navigate(`/${category.name}/subCategory`, {
+                            replace: false,
+                            state: { id: category.id },
+                          });
+                        }}
+                      >
+                        {category.name}
+                      </td>
+                      <td className="text-center ">{category.No_Products}</td>
                       <td
                         style={{
                           color: category.status === "Active" ? "green" : "red",
                         }}
-                        className="pl-10"
+                        className="text-center"
                       >
                         {category.status}
                       </td>
-                      <td className="pl-10">
-                        <BsThreeDotsVertical />
+                      <td className=" flex justify-center pt-5">
+                        <DropDown data={category} />
                       </td>
                       <td
                         onClick={() => {
                           deleteCategory(category.id);
                         }}
+                        className=" cursor-pointer"
                       >
                         <MdDeleteOutline
                           size={25}

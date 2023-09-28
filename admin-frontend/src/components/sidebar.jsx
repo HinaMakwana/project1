@@ -45,14 +45,14 @@ function Sidebar() {
         <div className="flex items-center px-[5px] py-[15px]">
           {/* <img src="logo.png" className="h-20 mix-blend-multiply transition-all duration-700" style={{display: view ? "block" : "none"}} /> */}
           <div
-            className="flex text-xl transition-all duration-700"
+            className="flex text-xl mt-5 transition-all duration-700"
             onClick={changeView}
             style={{marginLeft: view ? "130px" : "15px"}}
           >
             {view ? <FaRegDotCircle /> : <FiCircle />}
           </div>
         </div>
-        <div className="-mt-2">
+        <div className="mt-5">
           {menuItem.map((items, index) => (
             <NavLink
               to={items.path}

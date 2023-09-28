@@ -8,7 +8,6 @@ function Login() {
 	let [password,setPassword] = useState('');
 	let navigate = useNavigate();
 	const handleSubmit = async () => {
-		console.log(email,password);
 		let response = await fetch("http://localhost:1337/admin/login",{
 			method: 'POST',
 			body: JSON.stringify({
@@ -17,7 +16,6 @@ function Login() {
 			})
 		})
 		let res = await response.json();
-		console.log(response);
 		if(res.status === 400) {
 			toast.error(res.message,{
 				position: 'top-right'
@@ -59,7 +57,7 @@ function Login() {
 										placeholder='xyz@gmail.com'
 										required
 										onChange={(e)=> {setEmail(e.target.value)}}
-										className="pl-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-cyan-600 sm:text-sm sm:leading-6"
+										className="pl-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:ring-0 focus:outline-cyan-800"
 									/>
 								</div>
 							</div>
@@ -70,7 +68,7 @@ function Login() {
 										Password
 									</label>
 									<div className="text-sm">
-										<a href="#" className="font-semibold text-cyan-700 hover:text-cyan-700">
+										<a href="#" className="font-semibold text-cyan-700 hover:text-cyan-700 focus:ring-0 focus:outline-0 focus:text-blue-500">
 											Forgot password?
 										</a>
 									</div>
@@ -83,7 +81,7 @@ function Login() {
 										autoComplete="current-password"
 										required
 										onChange={(e)=> {setPassword(e.target.value)}}
-										className="pl-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-cyan-600 sm:text-sm sm:leading-6"
+										className="pl-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-cyan-600 focus:outline-cyan-700 sm:text-sm sm:leading-6"
 									/>
 								</div>
 							</div>

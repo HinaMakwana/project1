@@ -31,7 +31,18 @@ module.exports = {
     token : {
       type: 'string',
       allowNull: true
-    }
+    },
+    forgetPassToken : {
+      type: 'string',
+      allowNull: true,
+      columnType: 'varchar',
+      columnName: 'forgetPasswordToken'
+     },
+     forgetTokenExpire : {
+      type: 'number',
+      allowNull: true,
+      columnName: 'forgetPasswordTokenExpiryTime'
+     },
 
   },
   ValidationBeforeCreate : (data) => {

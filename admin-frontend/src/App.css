@@ -9,3 +9,8 @@
   background: #026e8c8b;
   color: #000;
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

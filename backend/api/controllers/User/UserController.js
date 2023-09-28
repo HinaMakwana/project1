@@ -41,6 +41,11 @@ module.exports = {
 					error :result.error
 				})
 			}
+			await sails.helpers.stripe.customer.create.with({
+				firstName,
+				lastName,
+				email
+			});
 			let checkEmail = await User.findOne({
 				email: email,
 				isDeleted :false

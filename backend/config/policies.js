@@ -9,44 +9,46 @@
  */
 
 module.exports.policies = {
-
   /***************************************************************************
-  *                                                                          *
-  * Default policy for all controllers and actions, unless overridden.       *
-  * (`true` allows public access)                                            *
-  *                                                                          *
-  ***************************************************************************/
+   *                                                                          *
+   * Default policy for all controllers and actions, unless overridden.       *
+   * (`true` allows public access)                                            *
+   *                                                                          *
+   ***************************************************************************/
 
   // '*': true,
-  "User/UserController" : {
-    '*' : 'getLanguage',
-    logout : 'isLoggedIn',
-    changePassword: 'isLoggedIn'
-
+  "User/UserController": {
+    "*": "getLanguage",
+    logout: "isLoggedIn",
+    changePassword: "isLoggedIn",
   },
-  "User/ProfileController" : {
-    '*' : 'getLanguage',
-    removeProfilePhoto : 'isLoggedIn',
-    changeProfilePic: 'isLoggedIn',
-    profile : 'isLoggedIn',
-    updateProfile: 'isLoggedIn',
-    addAddress: 'isLoggedIn',
+  "User/ProfileController": {
+    "*": "getLanguage",
+    removeProfilePhoto: "isLoggedIn",
+    changeProfilePic: "isLoggedIn",
+    profile: "isLoggedIn",
+    updateProfile: "isLoggedIn",
+    addAddress: "isLoggedIn",
   },
-  "Admin/AdminController" : {
-    '*' : 'getLanguage',
-    logout : 'isAdmin',
-    getProfile : 'isAdmin'
+  "User/CartController": {
+    "*": "getLanguage",
+    "*": "isLoggedIn",
   },
-  "Admin/CategoryController" : {
-    '*' : 'getLanguage',
-    '*' : 'isAdmin'
+  "Admin/AdminController": {
+    "*": "getLanguage",
+    logout: "isAdmin",
+    getProfile: "isAdmin",
   },
-  "Admin/SubCategoryController" : {
-    '*' : 'getLanguage',
-    '*' : 'isAdmin'
+  "Admin/CategoryController": {
+    "*": "getLanguage",
+    "*": "isAdmin",
   },
-  "Admin/ProductController" : {
-    '*' : 'getLanguage',
-    '*' : 'isAdmin'
-  }
+  "Admin/SubCategoryController": {
+    "*": "getLanguage",
+    "*": "isAdmin",
+  },
+  "Admin/ProductController": {
+    "*": "getLanguage",
+    "*": "isAdmin",
+  },
 };
