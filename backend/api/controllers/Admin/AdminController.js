@@ -227,7 +227,7 @@ module.exports = {
 	 * @param {Request} req
 	 * @param {Response} res
 	 * @description forget password api
-	 * @route (POST /forgetPass)
+	 * @route (POST /forgetPassword)
 	 */
 	forgetPassword: async (req,res) => {
 		let lang = req.getLocale();
@@ -265,7 +265,7 @@ module.exports = {
 	 * @param {Request} req
 	 * @param {Response} res
 	 * @description reset password api
-	 * @route (PATCH /resetPass)
+	 * @route (PATCH /resetPassword)
 	 */
 	resetPassword: async (req,res) => {
 		let lang = req.getLocale();
@@ -306,7 +306,7 @@ module.exports = {
 	 * @param {Request} req
 	 * @param {Response} res
 	 * @description change password api
-	 * @route (PATCH /changePass)
+	 * @route (PATCH /changePassword)
 	 */
 	changePassword: async (req,res) => {
 		let lang = req.getLocale();
@@ -344,6 +344,30 @@ module.exports = {
 			})
 		} catch (error) {
 			return res.status(resCode.SERVER_ERROR).json({
+				message: Msg("Error",lang)
+			})
+		}
+	},
+	/**
+	 *
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @description list all users by admin
+	 * @route (GET /listAll/users)
+	 */
+	listAllUsers: async (req,res) => {
+		const lang = req.getLocale();
+		try {
+			let users = await User.find({
+				isDeleted: false
+			})
+			return res.status(resCode.OK).json({
+				status: resCode.OK,
+				data: users
+			})
+		} catch (error) {
+			return res.status(resCode.SERVER_ERROR).json({
+				status: resCode.SERVER_ERROR,
 				message: Msg("Error",lang)
 			})
 		}

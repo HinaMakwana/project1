@@ -1,26 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/sidebar";
 import DropDownProfile from "../components/dropDownProfile";
-import { useNavigate } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
-import { MdDeleteOutline, MdEdit } from "react-icons/md";
+import { MdDeleteOutline } from "react-icons/md";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AddProduct from "../components/addProduct";
 import DropDown from "../components/dropDown";
 import EditProduct from "../components/editProduct";
+import { useDispatch, useSelector } from "react-redux";
+import { getProduct, remove, search } from "../redux/features/products/productSlice";
 
 function Products() {
-  let [products, setProducts] = useState([]);
   let [text, setText] = useState("");
-  let getProducts = async () => {
-    let response = await fetch("http://localhost:1337/listProducts", {
-      method: "GET",
-      headers: {
-        authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    });
-    let res = await response.json();
-    setProducts(res.data);
-  };
+  const dispatch = useDispatch();
+  let products = useSelector(state => state.product.data);
   let deleteProduct = async (productId) => {
     let response = await fetch(
       `http://localhost:1337/delete/product/${productId}`,
@@ -44,7 +38,7 @@ function Products() {
       toast.success(res.message, {
         position: "top-right",
       });
-      setProducts((prev) => prev.filter((product) => product.id !== id));
+      dispatch(remove({id: productId}))
     }
   };
   let searchProduct = async () => {
@@ -55,11 +49,11 @@ function Products() {
       }
     })
     let res = await response.json();
-    setProducts(res.data.rows)
+    dispatch(search(res.data.rows));
   }
 
   useEffect(() => {
-    getProducts();
+    dispatch(getProduct());
   }, []);
   return (
     <div className="flex">
@@ -87,7 +81,7 @@ function Products() {
                 <BsSearch />
               </span>
             </div>
-            <div className=" sm:absolute sm:right-1 md:right-12 lg:right-40 xl:right-24 2xl:right-32">
+            <div className=" sm:absolute sm:right-1 min-[700px]:right-4 md:right-8 min-[850px]:right-12 lg:right-40 xl:right-24 2xl:right-32">
               <AddProduct />
             </div>
           </div>

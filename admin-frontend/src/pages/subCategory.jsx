@@ -8,22 +8,14 @@ import DropDown from "../components/dropDown";
 import AddSubCategory from "../components/addSubCategory";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getSubCategory, search, remove } from "../redux/features/subCategory/subCategorySlice";
 
 function SubCategory() {
   const { state } = useLocation();
-  let [categories, setCategory] = useState([]);
   let [text, setText] = useState("");
-  let getCategories = async () => {
-    let response = await fetch(`http://localhost:1337/list/${state.id}`, {
-      method: "GET",
-      headers: {
-        authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    });
-    let res = await response.json();
-    setCategory(res.data);
-  };
+  const dispatch = useDispatch();
+  let categories = useSelector(state => state.subcategory.data);
   let deleteCategory = async (id) => {
     let response = await fetch(`http://localhost:1337/delete/subCategory/${id}`, {
       method: "DELETE",
@@ -44,9 +36,7 @@ function SubCategory() {
       toast.success(res.message, {
         position: "top-right",
       });
-      setCategory((prevCategories) =>
-        prevCategories.filter((category) => category.id !== id)
-      );
+      dispatch(remove({id: id}))
     }
   };
   let searchCategory = async () => {
@@ -57,10 +47,10 @@ function SubCategory() {
       }
     })
     let res = await response.json();
-    setCategory(res.data.rows)
+    dispatch(search(res.data.rows))
   }
   useEffect(() => {
-    getCategories();
+    dispatch(getSubCategory(state.id))
   }, []);
   return (
     <div className="flex">

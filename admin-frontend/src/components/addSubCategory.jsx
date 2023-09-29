@@ -11,10 +11,13 @@ import {
   useDisclosure,
   Input,
 } from "@nextui-org/react";
+import { useDispatch, useSelector } from "react-redux";
+import { add } from "../redux/features/subCategory/subCategorySlice";
 
 export default function AddSubCategory({ id }) {
   const [name, setName] = useState("");
   const [file, setFile] = useState();
+  const dispatch = useDispatch();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   let addSubCategory = async () => {
     const formData = new FormData();
@@ -41,6 +44,7 @@ export default function AddSubCategory({ id }) {
       toast.success(res.message, {
         position: "top-right",
       });
+      dispatch(add(res.data));
     }
   };
   return (

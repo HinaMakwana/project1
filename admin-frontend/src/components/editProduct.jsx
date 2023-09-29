@@ -10,7 +10,7 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
-import { MdEdit } from "react-icons/md";
+import {BiSolidEdit} from "react-icons/bi"
 
 export default function EditProduct({data}) {
 	const [des, setDes] = useState("");
@@ -49,7 +49,7 @@ export default function EditProduct({data}) {
 	}
   return (
     <>
-			<MdEdit onClick={onOpen} />
+			<BiSolidEdit onClick={onOpen} size={22} />
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           {(onClose) => (

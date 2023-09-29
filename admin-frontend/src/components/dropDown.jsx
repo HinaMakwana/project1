@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -8,19 +8,22 @@ import {
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { edit } from "../redux/features/categories/categorySlice";
+import { editData } from "../redux/features/subCategory/subCategorySlice";
+import { changeStatus } from "../redux/features/products/productSlice";
 
 function DropDown({ data }) {
-  let [status, setStatus] = useState("Active");
+  const dispatch = useDispatch();
   let url;
-  let editCategory = async () => {
+  let editCategory = async (status) => {
     if (data.category) {
-      url = "http://localhost:1337/edit/subCategory"
-    } else if(data.categoryId) {
-      url = "http://localhost:1337/changeStatus"
+      url = "http://localhost:1337/edit/subCategory";
+    } else if (data.categoryId) {
+      url = "http://localhost:1337/changeStatus";
     } else {
-      url = "http://localhost:1337/edit"
+      url = "http://localhost:1337/edit";
     }
-
     let response = await fetch(url, {
       method: "PATCH",
       body: JSON.stringify({
@@ -44,6 +47,9 @@ function DropDown({ data }) {
       toast.success(res.message, {
         position: "top-right",
       });
+      dispatch(edit(res.data));
+      dispatch(editData(res.data));
+      dispatch(changeStatus(res.data));
     }
   };
   return (
@@ -58,9 +64,8 @@ function DropDown({ data }) {
           <DropdownItem
             key="new"
             className="text-green-600"
-            onClick={()=>{editCategory()}}
-            onPress={() => {
-              setStatus("Active");
+            onClick={() => {
+              editCategory("Active");
             }}
           >
             Active
@@ -68,9 +73,8 @@ function DropDown({ data }) {
           <DropdownItem
             key="copy"
             className="text-red-600"
-            onClick={()=>{editCategory()}}
-            onPress={() => {
-              setStatus("Inactive");
+            onClick={() => {
+              editCategory("Inactive");
             }}
           >
             Inactive

@@ -8,21 +8,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import DropDown from "../components/dropDown";
 import AddCategory from "../components/addCategory";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategory, remove, search } from "../redux/features/categories/categorySlice";
 
 function Categories() {
-  let [categories, setCategory] = useState([]);
   let [text, setText] = useState("");
   let navigate = useNavigate();
-  let getCategories = async () => {
-    let response = await fetch("http://localhost:1337/listCategories", {
-      method: "GET",
-      headers: {
-        authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      },
-    });
-    let res = await response.json();
-    setCategory(res.data);
-  };
+  const dispatch = useDispatch();
+  let categories = useSelector(state => state.category.data)
   let deleteCategory = async (id) => {
     let response = await fetch(`http://localhost:1337/delete/${id}`, {
       method: "DELETE",
@@ -43,9 +36,7 @@ function Categories() {
       toast.success(res.message, {
         position: "top-right",
       });
-      setCategory((prevCategories) =>
-        prevCategories.filter((category) => category.id !== id)
-      );
+      dispatch(remove({id: id}))
     }
   };
   let searchCategory = async () => {
@@ -56,11 +47,11 @@ function Categories() {
       }
     })
     let res = await response.json();
-    setCategory(res.data.rows)
+    dispatch(search(res.data.rows))
   };
 
   useEffect(() => {
-    getCategories();
+    dispatch(getCategory())
   }, []);
   return (
     <div className="flex">

@@ -36,6 +36,10 @@ module.exports.routes = {
 	'POST /admin/logout' : 'Admin.AdminController.logout',
 	'GET /searchUser' : 'Admin.AdminController.searchUser',
 	'GET /adminProfile' : 'Admin.AdminController.getProfile',
+	'POST /forgetPassword' : 'Admin.AdminController.forgetPassword',
+	'PATCH /resetPassword' : 'Admin.AdminController.resetPassword',
+	'PATCH /changePassword' : 'Admin.AdminController.changePassword',
+	'GET /listAll/users' : 'Admin.AdminController.listAllUsers',
 
 	//CategoryController routes
 	'POST /add' : 'Admin.CategoryController.addCategory',
@@ -56,7 +60,7 @@ module.exports.routes = {
 	'POST /addProduct' : 'Admin.ProductController.addProduct',
 	'GET /searchProduct' : "Admin.ProductController.searchProduct",
 	'PATCH /edit/product' : 'Admin.ProductController.editProduct',
-	'DELETE /delete/product' : 'Admin.ProductController.deleteProduct',
+	'DELETE /delete/product/:productId' : 'Admin.ProductController.deleteProduct',
 	'PATCH /changeStatus' : 'Admin.ProductController.changeStatus',
 	'GET /listProducts' : 'Admin.ProductController.listAll',
 	'GET /download' : 'Admin.ProductController.downloadFile',

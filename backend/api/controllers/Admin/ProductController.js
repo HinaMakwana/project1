@@ -27,9 +27,10 @@ module.exports = {
         subCategoryId,
         description,
         quantity,
-        price
+        price,
+        brandName
       } = req.body;
-
+      console.log(req.body,'body');
       let result = await Product.ValidationBeforeCreate({
         name,
         categoryId,
@@ -37,11 +38,13 @@ module.exports = {
         description,
         quantity,
         price,
+        brandName
       });
       if (result.hasError) {
         return res.status(resCode.BAD_REQUEST).json({
           message: Msg("ValidationError", lang),
           status: resCode.BAD_REQUEST,
+          error: result.error
         });
       }
 
@@ -199,7 +202,7 @@ module.exports = {
     } catch (error) {
       return res.status(resCode.SERVER_ERROR).json({
         status: resCode.SERVER_ERROR,
-        message: Msg("Error", lang),
+        message: Msg("Error", lang) + error
       });
     }
   },
@@ -284,6 +287,7 @@ module.exports = {
 					"brandName",
 					"imageUrl",
 					"p"."isDeleted",
+          "p"."status",
 					"categoryId",
 					"subCategoryId",
 					"categoryName",

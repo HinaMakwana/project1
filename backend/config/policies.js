@@ -38,6 +38,8 @@ module.exports.policies = {
     "*": "getLanguage",
     logout: "isAdmin",
     getProfile: "isAdmin",
+    listAllUsers: "isAdmin",
+    changePassword: "isAdmin",
   },
   "Admin/CategoryController": {
     "*": "getLanguage",

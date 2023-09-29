@@ -22,15 +22,17 @@ module.exports = {
 		let lang = req.getLocale();
 		try {
 			let { name } = req.body;
-
+			console.log(name,'name');
 			let checkCategory = await Category.findOne({
 				name: name,
 				isDeleted: false
 			})
+			console.log(checkCategory,'c1');
 			let checkSubCategory = await SubCategory.findOne({
 				name: name,
 				isDeleted: false
 			})
+			console.log(checkSubCategory,'c2');
 			if(checkCategory || checkSubCategory) {
 				return res.status(resCode.CONFLICT).json({
 					status: resCode.CONFLICT,

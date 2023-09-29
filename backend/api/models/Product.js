@@ -26,7 +26,8 @@ module.exports = {
     },
     description : {
       type: "string",
-      columnType: "varchar(255)"
+      columnType: "varchar(255)",
+      allowNull: true,
     },
     quantity : {
       type: "number",
