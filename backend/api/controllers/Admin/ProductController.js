@@ -9,6 +9,7 @@ let { resCode, UUID, status } = sails.config.constants;
 let fs = require("node:fs");
 const path = require("path");
 const csvtojson = require("csvtojson");
+const { v4: uuid} = require('uuid')
 
 module.exports = {
   /**
@@ -28,9 +29,9 @@ module.exports = {
         description,
         quantity,
         price,
-        brandName
+        brandName,
       } = req.body;
-      console.log(req.body,'body');
+      console.log(req.body, "body");
       let result = await Product.ValidationBeforeCreate({
         name,
         categoryId,
@@ -38,13 +39,13 @@ module.exports = {
         description,
         quantity,
         price,
-        brandName
+        brandName,
       });
       if (result.hasError) {
         return res.status(resCode.BAD_REQUEST).json({
           message: Msg("ValidationError", lang),
           status: resCode.BAD_REQUEST,
-          error: result.error
+          error: result.error,
         });
       }
 
@@ -62,7 +63,7 @@ module.exports = {
       let checkCategory = await Category.findOne({
         id: categoryId,
         isDeleted: false,
-        status: status.A
+        status: status.A,
       });
       if (!checkCategory) {
         return res.status(resCode.BAD_REQUEST).json({
@@ -76,7 +77,7 @@ module.exports = {
           id: subCategoryId,
           category: categoryId,
           isDeleted: false,
-          status: status.A
+          status: status.A,
         });
         if (!checkSubCategory) {
           return res.status(resCode.BAD_REQUEST).json({
@@ -144,7 +145,7 @@ module.exports = {
       if (!findProduct) {
         return res.status(resCode.BAD_REQUEST).json({
           message: Msg("ProductNotFound", lang),
-          status: resCode.BAD_REQUEST
+          status: resCode.BAD_REQUEST,
         });
       }
 
@@ -159,12 +160,12 @@ module.exports = {
       return res.status(resCode.OK).json({
         message: Msg("ProductUpdated", lang),
         data: updateData,
-        status: resCode.OK
+        status: resCode.OK,
       });
     } catch (error) {
       return res.status(resCode.SERVER_ERROR).json({
         message: Msg("Error", lang) + error,
-        status: resCode.SERVER_ERROR
+        status: resCode.SERVER_ERROR,
       });
     }
   },
@@ -202,7 +203,7 @@ module.exports = {
     } catch (error) {
       return res.status(resCode.SERVER_ERROR).json({
         status: resCode.SERVER_ERROR,
-        message: Msg("Error", lang) + error
+        message: Msg("Error", lang) + error,
       });
     }
   },
@@ -217,15 +218,15 @@ module.exports = {
     let lang = req.getLocale();
     try {
       // let { id } = req.params;
-      let { status,id } = req.body;
+      let { status, id } = req.body;
       let findProduct = await Product.findOne({
         id: id,
-        isDeleted: false
+        isDeleted: false,
       });
       if (!findProduct) {
         return res.status(resCode.BAD_REQUEST).json({
           message: Msg("ProductNotFound", lang),
-          status: resCode.BAD_REQUEST
+          status: resCode.BAD_REQUEST,
         });
       }
 
@@ -237,12 +238,12 @@ module.exports = {
       });
       return res.status(resCode.OK).json({
         data: changeStatus,
-        status: resCode.OK
+        status: resCode.OK,
       });
     } catch (error) {
       return res.status(resCode.SERVER_ERROR).json({
         message: Msg("Error", lang) + error,
-        status: resCode.SERVER_ERROR
+        status: resCode.SERVER_ERROR,
       });
     }
   },
@@ -308,8 +309,8 @@ module.exports = {
       }
       return res.status(resCode.OK).json({
         status: resCode.OK,
-        data: data
-      })
+        data: data,
+      });
     } catch (error) {
       return res.status(resCode.SERVER_ERROR).json({
         message: Msg("Error", lang) + error,
@@ -324,27 +325,28 @@ module.exports = {
    * @route (GET /download)
    */
   downloadFile: async (req, res) => {
+    const lang = req.getLocale();
     try {
-      const filename = "/Users/ztlab133/Desktop/e-commerce/sample_product.csv";
+      const filename = `${sails.config.appPath}/sample_product.csv`;
 
       // Set the appropriate headers for the download
       res.setHeader(
         "Content-Disposition",
-        `attachment; filename='sample_product.csv'`
+        `attachment; filename=sample_product.csv`
       );
-      res.setHeader("Content-Type", "application/octet-stream");
-
+      // res.setHeader("Content-Type", "application/octet-stream");
+      res.send("ok");
       // Create a read stream from the file and pipe it to the response
-      const fileStream = fs.createReadStream(filename);
+      // const fileStream = fs.createReadStream(filename);
 
-      // Handle errors and send the file
-      fileStream.on("error", (error) => {
-        sails.log.error(error);
-        res.status(resCode.SERVER_ERROR).json({
-          message: Msg("Error", lang),
-        });
-      });
-      fileStream.pipe(res);
+      // // Handle errors and send the file
+      // fileStream.on("error", (error) => {
+      //   sails.log.error(error);
+      //   res.status(resCode.SERVER_ERROR).json({
+      //     message: Msg("Error", lang) + error,
+      //   });
+      // });
+      // fileStream.pipe(res);
     } catch (error) {
       res.status(resCode.SERVER_ERROR).json({
         message: Msg("Error", lang) + error,

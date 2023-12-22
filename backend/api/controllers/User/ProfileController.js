@@ -8,7 +8,6 @@ let Msg = sails.config.getMessage;
 let { resCode } = sails.config.constants;
 const path = require("path");
 const fs = require("node:fs");
-const { log } = require("console");
 
 module.exports = {
   /**

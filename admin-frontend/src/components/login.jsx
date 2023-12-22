@@ -44,62 +44,59 @@ function Login() {
 					</div>
 
 					<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm space-y-6">
-							<div>
-								<label htmlFor="email" className="block text-base font-semibold leading-6 text-gray-900">
-									Email address
+						<div>
+							<label htmlFor="email" className="block text-base font-semibold leading-6 text-gray-900">
+								Email address
+							</label>
+							<div className="mt-2">
+								<input
+									id="email"
+									name="email"
+									type="email"
+									autoComplete="email"
+									placeholder='xyz@gmail.com'
+									required
+									onChange={(e)=> {setEmail(e.target.value)}}
+									className="pl-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:ring-0 focus:outline-cyan-800"
+								/>
+							</div>
+						</div>
+						<div>
+							<div className="flex items-center justify-between">
+								<label htmlFor="password" className="block text-base font-semibold leading-6 text-gray-900">
+									Password
 								</label>
-								<div className="mt-2">
-									<input
-										id="email"
-										name="email"
-										type="email"
-										autoComplete="email"
-										placeholder='xyz@gmail.com'
-										required
-										onChange={(e)=> {setEmail(e.target.value)}}
-										className="pl-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus:ring-0 focus:outline-cyan-800"
-									/>
+								<div className="text-sm">
+									<a href="#" className="font-semibold text-cyan-700 hover:text-cyan-700 focus:ring-0 focus:outline-0 focus:text-blue-500">
+										Forgot password?
+									</a>
 								</div>
 							</div>
-
-							<div>
-								<div className="flex items-center justify-between">
-									<label htmlFor="password" className="block text-base font-semibold leading-6 text-gray-900">
-										Password
-									</label>
-									<div className="text-sm">
-										<a href="#" className="font-semibold text-cyan-700 hover:text-cyan-700 focus:ring-0 focus:outline-0 focus:text-blue-500">
-											Forgot password?
-										</a>
-									</div>
-								</div>
-								<div className="mt-2">
-									<input
-										id="password"
-										name="password"
-										type="password"
-										autoComplete="current-password"
-										required
-										onChange={(e)=> {setPassword(e.target.value)}}
-										className="pl-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-cyan-600 focus:outline-cyan-700 sm:text-sm sm:leading-6"
-									/>
-								</div>
+							<div className="mt-2">
+								<input
+									id="password"
+									name="password"
+									type="password"
+									autoComplete="current-password"
+									required
+									onChange={(e)=> {setPassword(e.target.value)}}
+									className="pl-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-400 focus:ring-0 focus:ring-inset focus:ring-cyan-600 focus:outline-cyan-700 sm:text-sm sm:leading-6"
+								/>
 							</div>
-
-							<div>
-								<button
-									type="submit"
-									onClick={handleSubmit}
-									className="flex w-full justify-center rounded-md bg-cyan-600 px-3 py-1.5 text-base font-semibold leading-6 text-white shadow-sm hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
-								>
-									Login
-								</button>
-							</div>
+						</div>
+						<div>
+							<button
+								type="submit"
+								onClick={handleSubmit}
+								className="flex w-full justify-center rounded-md bg-cyan-600 px-3 py-1.5 text-base font-semibold leading-6 text-white shadow-sm hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+							>
+								Login
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-
 	)
 }
 

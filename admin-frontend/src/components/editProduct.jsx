@@ -67,6 +67,7 @@ export default function EditProduct({data}) {
                     setDes(e.target.value);
                   }}
                 />
+
                 <lable htmmlFor="price">Price</lable>
                 <input
                   id="price"
@@ -77,6 +78,7 @@ export default function EditProduct({data}) {
                   }}
                   required
                 />
+                
                 <lable htmlFor="quantity">Quantity</lable>
                 <input
                   id="quantity"

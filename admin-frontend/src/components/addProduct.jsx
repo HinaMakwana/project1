@@ -28,7 +28,6 @@ export default function AddProduct() {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   let addProduct = async () => {
-    console.log(name,id,price,quantity,subId,des);
     const formData = new FormData();
     formData.append("image", file);
     formData.append("name", name);
@@ -73,7 +72,7 @@ export default function AddProduct() {
     subId && formData.delete("subCategoryId");
     des && formData.delete("description");
     const entry = [...formData.entries()];
-    console.log(entry,'entry of form data after create');
+    console.log(entry,'delete all entry of form data after create');
   };
   let getCategories = async () => {
     let response = await fetch("http://localhost:1337/list/active", {
@@ -132,6 +131,7 @@ export default function AddProduct() {
                   }}
                   required
                 />
+
                 <label htmlFor="category">Select Category</label>
                 <Select
                   placeholder="Select category"
@@ -154,6 +154,7 @@ export default function AddProduct() {
                     </SelectItem>
                   ))}
                 </Select>
+
                 <label htmlFor="subCategory">Select SubCategory</label>
                 <Select
                   placeholder="Select subCategory"
@@ -177,6 +178,7 @@ export default function AddProduct() {
                     </SelectItem>
                   ))}
                 </Select>
+
                 <label htmlFor="des">Description</label>
                 <input
 									id="des"
@@ -187,6 +189,7 @@ export default function AddProduct() {
                     setDes(e.target.value);
                   }}
                 />
+
                 <label htmlFor="price">Price</label>
                 <input
 									id="price"
@@ -198,6 +201,7 @@ export default function AddProduct() {
                   }}
                   required
                 />
+
                 <label htmlFor="quantity">Quantity</label>
                 <input
 									id="quantity"
@@ -208,6 +212,7 @@ export default function AddProduct() {
                     setQuantity(e.target.value);
                   }}
                 />
+                
                 <label htmlFor="file" className="mt-2">
                   Upload Image Of Product:
                 </label>
