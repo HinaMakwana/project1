@@ -49,7 +49,7 @@ function Sidebar() {
             onClick={changeView}
             style={{marginLeft: view ? "130px" : "15px"}}
           >
-            {view ? <FaRegDotCircle /> : <FiCircle />}
+            {view ? <FaRegDotCircle style={{ marginLeft: '70px'}}/> : <FiCircle />}
           </div>
         </div>
         <div className="mt-5">

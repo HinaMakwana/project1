@@ -34,6 +34,10 @@ module.exports.policies = {
     "*": "getLanguage",
     "*": "isLoggedIn",
   },
+  "User/OrderController" : {
+    getOrder: 'isLoggedIn',
+    cancelOrder: 'isLoggedIn',
+  },
   "Admin/AdminController": {
     "*": "getLanguage",
     logout: "isAdmin",
@@ -53,4 +57,8 @@ module.exports.policies = {
     "*": "getLanguage",
     "*": "isAdmin",
   },
+  "Admin/DashboardController": {
+    "*": "getLanguage",
+    "*": "isAdmin",
+  }
 };

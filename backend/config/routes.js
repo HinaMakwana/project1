@@ -45,20 +45,16 @@ module.exports.routes = {
 	'POST /add' : 'Admin.CategoryController.addCategory',
 	'PATCH /edit' : 'Admin.CategoryController.editCategory',
 	'DELETE /delete/:id' : 'Admin.CategoryController.deleteCategory',
-	'GET /search' : 'Admin.CategoryController.searchCategory',
 	'GET /listCategories' : 'Admin.CategoryController.listAllCategory',
-	'GET /list/active'  : 'Admin.CategoryController.listActiveCategories',
 
 	//SubCategoryController routes
 	'POST /add/subCategory' : 'Admin.SubCategoryController.addSubCategory',
 	'PATCH /edit/subCategory' : 'Admin.SubCategoryController.editSubCategory',
 	'DELETE /delete/subCategory/:id' : 'Admin.SubCategoryController.deleteSubCategory',
-	'GET /searchSubCategory' : 'Admin.SubCategoryController.searchSubCategory',
 	'GET /list/:id' : 'Admin.SubCategoryController.listAllSubCategory',
 
 	//ProductController routes
 	'POST /addProduct' : 'Admin.ProductController.addProduct',
-	'GET /searchProduct' : "Admin.ProductController.searchProduct",
 	'PATCH /edit/product' : 'Admin.ProductController.editProduct',
 	'DELETE /delete/product/:productId' : 'Admin.ProductController.deleteProduct',
 	'PATCH /changeStatus' : 'Admin.ProductController.changeStatus',
@@ -70,7 +66,15 @@ module.exports.routes = {
 	'POST /add/cart' : 'User.CartController.addTocart',
 	'DELETE /remove/cart' : 'User.CartController.removeToCart',
 	'GET /cart' : 'User.CartController.listCarts',
+	'GET /oneCart/:id' : 'User.CartController.listCart',
+	'PATCH /update-cart' : 'User.CartController.updateQuantity',
 
 	//OrderController routes
 	'GET /order' : 'User.OrderController.createOrder',
+	'POST /get-order' : 'User.OrderController.getOrder',
+	'PATCH /cancel-order/:id' : 'User.OrderController.cancelOrder',
+
+	//DashboardController routes
+	'GET /get-all-count' : 'Admin.DashboardController.getAllData',
+	'GET /get-orders-datewise' : 'Admin.DashboardController.getOrdersDateWise',
 };

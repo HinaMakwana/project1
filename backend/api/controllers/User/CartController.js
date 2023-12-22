@@ -137,5 +137,76 @@ module.exports = {
 				message: Msg("Error",lang)
 			})
 		}
+	},
+	/**
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @description list aone cart of user
+	 * @route (GET /oneCart/:id)
+	 */
+	listCart : async (req,res) => {
+		let lang = req.getLocale();
+		try {
+			let { id } = req.me;
+			let { id: cartId} = req.params;
+
+			let cart = await Cart.findOne({
+				user: id,
+				isDeleted: false,
+				id: cartId
+			})
+
+			if(!cart) {
+				return res.status(resCode.OK).json({
+					data: 'Item not find'
+				})
+			}
+			return res.status(resCode.OK).json({
+				data: cart,
+			})
+		} catch (error) {
+			return res.status(resCode.SERVER_ERROR).json({
+				message: Msg("Error",lang)
+			})
+		}
+	},
+	/**
+	 * @param {Request} req
+	 * @param {Response} res
+	 * @description update product quantity in cart
+	 * @route (PATCH /update-cart)
+	 */
+	updateQuantity : async (req,res) => {
+		try {
+			const { id } = req.me;
+
+			const { quantity, cartId } = req.body;
+
+			const findCart = await Cart.findOne({
+				id: cartId,
+				isDeleted: false,
+				user: id
+			})
+
+			if(!findCart) {
+				return res.status(resCode.BAD_REQUEST).json({
+					message: 'bad request'
+				})
+			}
+			const updatedData = await Cart.updateOne({
+				id: cartId,
+				isDeleted: false,
+				user: id
+			}).set({ quantity: quantity })
+
+			return res.status(resCode.OK).json({
+				message: 'cart updated',
+				cartData: updatedData
+			})
+		} catch (error) {
+			return res.status(500).json({
+				message: "server error"
+			})
+		}
 	}
 };

@@ -41,11 +41,7 @@ module.exports = {
 					error :result.error
 				})
 			}
-			await sails.helpers.stripe.customer.create.with({
-				firstName,
-				lastName,
-				email
-			});
+
 			let checkEmail = await User.findOne({
 				email: email,
 				isDeleted :false
@@ -75,6 +71,13 @@ module.exports = {
 				password: hashPass
 			}
 			let createUser = await User.create(userData).fetch();
+			if(createUser) {
+				await sails.helpers.stripe.customer.create.with({
+					firstName,
+					lastName,
+					email
+				});
+			}
 			await sails.helpers.sendEmail(email,firstName);
 			return res.status(resCode.CREATED).json({
 				message: Msg("Registered",lang),

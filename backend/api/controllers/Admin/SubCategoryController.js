@@ -183,41 +183,6 @@ module.exports = {
 	listAllSubCategory : async (req,res) => {
 		let lang = req.getLocale();
 		try {
-			let {id} = req.params;
-
-			let checkCategory = await  Category.findOne({
-				id: id,
-				isDeleted: false,
-				status: status.A
-			})
-			if(!checkCategory) {
-				return res.status(resCode.NOT_FOUND).json({
-					message: Msg("InvalidCategory",lang),
-					status: resCode.NOT_FOUND
-				})
-			}
-			let data = await SubCategory.find({ isDeleted: false, category: id })
-			return res.status(resCode.OK).json({
-				data: data,
-				status: resCode.OK
-			})
-		} catch (error) {
-			return res.status(resCode.SERVER_ERROR).json({
-				message: Msg("Error",lang),
-				status: resCode.SERVER_ERROR
-			})
-		}
-	},
-	/**
-   *
-   * @param {Request} req
-   * @param {Response} res
-   * @description search subCategories
-   * @route (GET /searchSubCategory)
-   */
-	searchSubCategory : async (req,res) => {
-		let lang = req.getLocale();
-		try {
 			let {title} = req.query;
 			let query = `
 				SELECT
@@ -250,5 +215,6 @@ module.exports = {
 				message: Msg("Error",lang) + error
 			})
 		}
-	}
+	},
+
 };

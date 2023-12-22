@@ -22,17 +22,17 @@ module.exports = {
 		let lang = req.getLocale();
 		try {
 			let { name } = req.body;
-			console.log(name,'name');
+
 			let checkCategory = await Category.findOne({
 				name: name,
 				isDeleted: false
 			})
-			console.log(checkCategory,'c1');
+
 			let checkSubCategory = await SubCategory.findOne({
 				name: name,
 				isDeleted: false
 			})
-			console.log(checkSubCategory,'c2');
+
 			if(checkCategory || checkSubCategory) {
 				return res.status(resCode.CONFLICT).json({
 					status: resCode.CONFLICT,
@@ -177,71 +177,18 @@ module.exports = {
 	listAllCategory : async (req,res) => {
 		let lang = req.getLocale();
 		try {
-			let categories = await Category.find({ isDeleted: false})
-			return res.status(resCode.OK).json({
-				data: categories
-			})
-		} catch (error) {
-			return res.status(resCode.SERVER_ERROR).json({
-				message: Msg("Error",lang) + error
-			})
-		}
-	},
-	/**
-   *
-   * @param {Request} req
-   * @param {Response} res
-   * @description list all active categories
-   * @route (GET /list/active)
-   */
-	listActiveCategories : async (req,res) => {
-		let lang = req.getLocale();
-		try {
-			let categories = await Category.find({
-				isDeleted: false,
-				status: status.A
-			})
-			return res.status(resCode.OK).json({
-				data: categories
-			})
-		} catch (error) {
-			return res.status(resCode.SERVER_ERROR).json({
-				message: Msg("Error",lang) + error
-			})
-		}
-	},
-	/**
-   *
-   * @param {Request} req
-   * @param {Response} res
-   * @description search categories
-   * @route (GET /search)
-   */
-	searchCategory : async (req,res) => {
-		let lang = req.getLocale();
-		try {
-			let {title} = req.query;
-			let query = `
-				SELECT
-					"id",
-					"categoryName" AS "name",
-					"Image",
-					"Number of Products" AS "No_Products",
-					"isDeleted",
-					"status"
-				FROM category
-				WHERE LOWER("categoryName") LIKE '%' || LOWER('${title}') || '%'
+			let { search } = req.query;
+
+			const query = `
+				SELECT * FROM category
+				WHERE LOWER("categoryName") LIKE '%' || LOWER('${search}') || '%'
 				AND "isDeleted" = false
+				ORDER BY "createdAt" DESC
 			`
-			let data = await sails.sendNativeQuery(query);
-			if(data.rows.length === 0) {
-				return res.status(resCode.OK).json({
-					message: Msg("NoResult",lang)
-				})
-			}
+			const categories = await sails.sendNativeQuery(query);
+
 			return res.status(resCode.OK).json({
-				status: resCode.OK,
-				data: data
+				data: categories.rows
 			})
 		} catch (error) {
 			return res.status(resCode.SERVER_ERROR).json({

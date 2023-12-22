@@ -9,7 +9,6 @@ let { resCode, UUID, status } = sails.config.constants;
 let fs = require("node:fs");
 const path = require("path");
 const csvtojson = require("csvtojson");
-const { v4: uuid} = require('uuid')
 
 module.exports = {
   /**
@@ -31,7 +30,7 @@ module.exports = {
         price,
         brandName,
       } = req.body;
-      console.log(req.body, "body");
+
       let result = await Product.ValidationBeforeCreate({
         name,
         categoryId,
@@ -257,26 +256,6 @@ module.exports = {
   listAll: async (req, res) => {
     let lang = req.getLocale();
     try {
-      let data = await Product.find({ isDeleted: false });
-      return res.status(resCode.OK).json({
-        data: data,
-      });
-    } catch (error) {
-      return res.status(resCode.SERVER_ERROR).json({
-        message: Msg("Error", lang),
-      });
-    }
-  },
-  /**
-   *
-   * @param {Request} req
-   * @param {Response} res
-   * @description search product
-   * @route (GET /searchProduct)
-   */
-  searchProduct: async (req, res) => {
-    let lang = req.getLocale();
-    try {
       let { name } = req.query;
       let query = `
 				SELECT
@@ -391,7 +370,7 @@ module.exports = {
           let data = await csvtojson().fromFile(uploadedFiles[0].fd);
           for (const validate of data) {
             let result = await Product.ValidationBeforeCreate(validate);
-            console.log(result);
+
             if (result.hasError) {
               return res.status(resCode.BAD_REQUEST).json({
                 message: Msg("ValidationError", lang),
@@ -409,7 +388,7 @@ module.exports = {
             }
             validate.id = UUID();
           }
-          console.log(data);
+          
           let createProducts = await Product.createEach(data).fetch();
           return res.status(resCode.CREATED).json({
             message: Msg("ProductCreated", lang),
